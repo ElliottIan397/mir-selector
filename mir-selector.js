@@ -54,98 +54,120 @@ if (!container) {
 
                             console.log(counties);
 
-let countyHtml = `
+                            let countyHtml = `
     <label for="countySelect"><strong>Select County</strong></label><br><br>
 
     <select id="countySelect">
         <option value="">-- Select County --</option>
 `;
 
-counties.forEach(item => {
+                            counties.forEach(item => {
 
-    countyHtml += `
+                                countyHtml += `
         <option value="${item.county}">
             ${item.county}
         </option>
     `;
 
-});
+                            });
 
-countyHtml += `
+                            countyHtml += `
     </select>
 
     <div id="reportContainer" style="margin-top:20px;"></div>
 `;
 
-countyContainer.innerHTML = countyHtml;
+                            countyContainer.innerHTML = countyHtml;
 
-// ====================================
-// County selected
-// ====================================
+                            // ====================================
+                            // County selected
+                            // ====================================
 
-document.getElementById("countySelect")
-    .addEventListener("change", function () {
+                            document.getElementById("countySelect")
+                                .addEventListener("change", function () {
 
-        const selectedCounty = this.value;
+                                    const selectedCounty = this.value;
 
-        const reportContainer =
-            document.getElementById("reportContainer");
+                                    const reportContainer =
+                                        document.getElementById("reportContainer");
 
-        if (!selectedCounty) {
-            reportContainer.innerHTML = "";
-            return;
-        }
+                                    if (!selectedCounty) {
+                                        reportContainer.innerHTML = "";
+                                        return;
+                                    }
 
-        const county = counties.find(c => c.county === selectedCounty);
+                                    const county = counties.find(c => c.county === selectedCounty);
 
-        if (!county) {
-            reportContainer.innerHTML =
-                "<p style='color:red;'>County not found.</p>";
-            return;
-        }
+                                    if (!county) {
+                                        reportContainer.innerHTML =
+                                            "<p style='color:red;'>County not found.</p>";
+                                        return;
+                                    }
 
-        let html = "";
+                                    let html = "";
 
-        if (county.report_id) {
+                                    switch (county.report_state) {
 
-            html += `
-                <h3>Executive Market Intelligence Report Available</h3>
+                                        case "published":
 
-                <p>
-                    <a href="/${county.url_slug}" target="_blank">
-                        View Executive Market Intelligence Report
-                    </a>
-                </p>
-            `;
+                                            html += `
+            <h3>Executive Market Intelligence Report Available</h3>
 
-        } else {
+            <p>
+                <a href="https://digitolservices.com/${county.url_slug}" target="_blank">
+                    View Executive Market Intelligence Report
+                </a>
+            </p>
+        `;
 
-            const pct = county.coverage_pct
-                ? (parseFloat(county.coverage_pct) * 100).toFixed(1)
-                : "0.0";
+                                            break;
 
-            html += `
-                <h3>Report Coming Soon</h3>
+                                        case "generating":
 
-                <p>
-                    Current crawl coverage:
-                    <strong>${pct}%</strong>
-                </p>
+                                            html += `
+            <h3>Report Currently Being Generated</h3>
 
-                <p>
-                    Reports are automatically published
-                    once coverage reaches
-                    <strong>85%</strong>.
-                </p>
-            `;
+            <p>
+                Current crawl coverage:
+                <strong>${(parseFloat(county.coverage_pct) * 100).toFixed(1)}%</strong>
+            </p>
 
-        }
+            <p>
+                Your county has exceeded the publication threshold.
+                The report is currently being generated and will be
+                published shortly.
+            </p>
+        `;
 
-        reportContainer.innerHTML = html;
+                                            break;
 
-    });
+                                        default:
 
-                            
+                                            const pct = county.coverage_pct
+                                                ? (parseFloat(county.coverage_pct) * 100).toFixed(1)
+                                                : "0.0";
+
+                                            html += `
+            <h3>Report Coming Soon</h3>
+
+            <p>
+                Current crawl coverage:
+                <strong>${pct}%</strong>
+            </p>
+
+            <p>
+                Executive Market Intelligence Reports are
+                automatically generated once coverage reaches
+                <strong>85%</strong>.
+            </p>
+        `;
+                                    }
+
+                                    reportContainer.innerHTML = html;
+
+                                });
+
+
                         })
                         .catch(error => {
 
