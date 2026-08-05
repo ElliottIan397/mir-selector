@@ -3,8 +3,23 @@ console.log("mir-selector.js loaded");
 const container = document.getElementById("mir-selector");
 
 if (!container) {
-    console.log("Container not found");
-} else {
-    console.log("Container found");
-    container.innerHTML = "<h2 style='color:green;'>✓ JavaScript Loaded Successfully</h2>";
+    console.log("No MIR selector container found.");
+    return;
 }
+
+container.innerHTML = "<p>Loading states...</p>";
+
+fetch("https://automation.digitolservices.com/webhook/mir/states")
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+
+        container.innerHTML =
+            "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
+    })
+    .catch(error => {
+        console.error(error);
+
+        container.innerHTML =
+            "<p style='color:red;'>Unable to load states.</p>";
+    });
