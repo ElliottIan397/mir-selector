@@ -54,9 +54,30 @@ if (!container) {
 
                             console.log(counties);
 
-                            countyContainer.innerHTML =
-                                "<pre>" + JSON.stringify(counties, null, 2) + "</pre>";
+let countyHtml = `
+    <label for="countySelect"><strong>Select County</strong></label><br><br>
 
+    <select id="countySelect">
+        <option value="">-- Select County --</option>
+`;
+
+counties.forEach(item => {
+
+    countyHtml += `
+        <option value="${item.county}">
+            ${item.county}
+        </option>
+    `;
+
+});
+
+countyHtml += `
+    </select>
+
+    <div id="reportContainer" style="margin-top:20px;"></div>
+`;
+
+countyContainer.innerHTML = countyHtml;
                         })
                         .catch(error => {
 
