@@ -12,9 +12,6 @@ if (!container) {
         .then(response => response.json())
         .then(states => {
 
-            console.log(states);
-
-            // Build the HTML
             let html = `
                 <label for="stateSelect"><strong>Select State</strong></label><br><br>
 
@@ -23,11 +20,7 @@ if (!container) {
             `;
 
             states.forEach(item => {
-                html += `
-                    <option value="${item.state}">
-                        ${item.state}
-                    </option>
-                `;
+                html += `<option value="${item.state}">${item.state}</option>`;
             });
 
             html += `
@@ -37,6 +30,44 @@ if (!container) {
             `;
 
             container.innerHTML = html;
+
+            // -----------------------------
+            // State selected
+            // -----------------------------
+
+            document.getElementById("stateSelect")
+                .addEventListener("change", function () {
+
+                    const state = this.value;
+                    const countyContainer = document.getElementById("countyContainer");
+
+                    if (!state) {
+                        countyContainer.innerHTML = "";
+                        return;
+                    }
+
+                    countyContainer.innerHTML = "<p>Loading counties...</p>";
+
+                    fetch(`https://automation.digitolservices.com/webhook/mir/counties?state=${state}`)
+                        .then(response => response.json())
+                        .then(counties => {
+
+                            console.log(counties);
+
+                            countyContainer.innerHTML =
+                                "<pre>" + JSON.stringify(counties, null, 2) + "</pre>";
+
+                        })
+                        .catch(error => {
+
+                            console.error(error);
+
+                            countyContainer.innerHTML =
+                                "<p style='color:red;'>Unable to load counties.</p>";
+
+                        });
+
+                });
 
         })
         .catch(error => {
