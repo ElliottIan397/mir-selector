@@ -1,10 +1,10 @@
-console.log("mir-selector loaded");
+console.log("mir-selector.js loaded");
 
 const container = document.getElementById("mir-selector");
 
 if (!container) {
-    console.log("No MIR selector found.");
-    return;
+    console.log("Container not found");
+} else {
+    console.log("Container found");
+    container.innerHTML = "<h2 style='color:green;'>✓ JavaScript Loaded Successfully</h2>";
 }
-
-container.innerHTML = "<h2>MIR Selector Loaded</h2>";
