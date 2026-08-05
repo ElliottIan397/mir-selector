@@ -78,6 +78,74 @@ countyHtml += `
 `;
 
 countyContainer.innerHTML = countyHtml;
+
+// ====================================
+// County selected
+// ====================================
+
+document.getElementById("countySelect")
+    .addEventListener("change", function () {
+
+        const selectedCounty = this.value;
+
+        const reportContainer =
+            document.getElementById("reportContainer");
+
+        if (!selectedCounty) {
+            reportContainer.innerHTML = "";
+            return;
+        }
+
+        const county = counties.find(c => c.county === selectedCounty);
+
+        if (!county) {
+            reportContainer.innerHTML =
+                "<p style='color:red;'>County not found.</p>";
+            return;
+        }
+
+        let html = "";
+
+        if (county.report_id) {
+
+            html += `
+                <h3>Executive Market Intelligence Report Available</h3>
+
+                <p>
+                    <a href="/${county.url_slug}" target="_blank">
+                        View Executive Market Intelligence Report
+                    </a>
+                </p>
+            `;
+
+        } else {
+
+            const pct = county.coverage_pct
+                ? (parseFloat(county.coverage_pct) * 100).toFixed(1)
+                : "0.0";
+
+            html += `
+                <h3>Report Coming Soon</h3>
+
+                <p>
+                    Current crawl coverage:
+                    <strong>${pct}%</strong>
+                </p>
+
+                <p>
+                    Reports are automatically published
+                    once coverage reaches
+                    <strong>85%</strong>.
+                </p>
+            `;
+
+        }
+
+        reportContainer.innerHTML = html;
+
+    });
+
+                            
                         })
                         .catch(error => {
 
