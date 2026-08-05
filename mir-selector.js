@@ -10,17 +10,42 @@ if (!container) {
 
     fetch("https://automation.digitolservices.com/webhook/mir/states")
         .then(response => response.json())
-        .then(data => {
-            console.log(data);
+        .then(states => {
 
-            container.innerHTML =
-                "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
+            console.log(states);
+
+            // Build the HTML
+            let html = `
+                <label for="stateSelect"><strong>Select State</strong></label><br><br>
+
+                <select id="stateSelect">
+                    <option value="">-- Select State --</option>
+            `;
+
+            states.forEach(item => {
+                html += `
+                    <option value="${item.state}">
+                        ${item.state}
+                    </option>
+                `;
+            });
+
+            html += `
+                </select>
+
+                <div id="countyContainer" style="margin-top:20px;"></div>
+            `;
+
+            container.innerHTML = html;
+
         })
         .catch(error => {
+
             console.error(error);
 
             container.innerHTML =
                 "<p style='color:red;'>Unable to load states.</p>";
+
         });
 
 }
