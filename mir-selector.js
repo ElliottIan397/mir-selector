@@ -102,7 +102,7 @@ function enableSearchableSelect(selector) {
         element.tomselect.destroy();
     }
 
-    return new TomSelect(element, {
+    const ts = new TomSelect(element, {
 
         create: false,
 
@@ -116,7 +116,15 @@ function enableSearchableSelect(selector) {
 
         hidePlaceholder: false,
 
-        placeholder: "Start typing...",
+        placeholder: "",
+
+            onInitialize: function () {
+        this.control_input.placeholder = "Start typing...";
+    },
+
+    onChange: function (value) {
+        this.control_input.placeholder = value ? "" : "Start typing...";
+    },
 
         sortField: {
             field: "text",
@@ -124,6 +132,10 @@ function enableSearchableSelect(selector) {
         }
 
     });
+
+    ts.wrapper.classList.add("digitol-search");
+
+return ts;
 
 }
     
@@ -467,6 +479,26 @@ function enableSearchableSelect(selector) {
                 #mir-selector .mir-button {
                     width: 100%;
                     text-align: center;
+                }
+
+                .digitol-search .ts-control {
+                    position: relative;
+                    padding-left: 42px;
+                }
+
+                .digitol-search .ts-control::before {
+                    content: "🔍";
+                    position: absolute;
+                    left: 14px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    opacity: .45;
+                    pointer-events: none;
+                }
+
+                .ts-wrapper.focus .ts-control {
+                    border-color: #2E8B57;
+                    box-shadow: 0 0 0 4px rgba(46,139,87,.15);
                 }
             }
         `;
