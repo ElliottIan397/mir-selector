@@ -925,6 +925,10 @@ return ts;
         stateSelect.addEventListener("change", () => {
             const stateCode = stateSelect.value;
 
+            // Destroy existing County Tom Select instance
+                if (countySelect.tomselect) {
+                    countySelect.tomselect.destroy();
+                }
             countySelect.disabled = true;
             countySelect.innerHTML = `
                 <option value="">Select a state first</option>
