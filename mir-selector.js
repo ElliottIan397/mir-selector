@@ -86,6 +86,47 @@
         return Math.min(100, Math.max(0, numericValue * 100));
     }
 
+// ----------------------------------------------------
+// Upgrade a standard SELECT into a searchable selector
+// ----------------------------------------------------
+function enableSearchableSelect(selector) {
+
+    const element = document.querySelector(selector);
+
+    if (!element) {
+        return null;
+    }
+
+    // Already initialized?
+    if (element.tomselect) {
+        element.tomselect.destroy();
+    }
+
+    return new TomSelect(element, {
+
+        create: false,
+
+        allowEmptyOption: true,
+
+        maxOptions: 500,
+
+        closeAfterSelect: true,
+
+        openOnFocus: true,
+
+        hidePlaceholder: false,
+
+        placeholder: "Start typing...",
+
+        sortField: {
+            field: "text",
+            direction: "asc"
+        }
+
+    });
+
+}
+    
     function injectStyles() {
         if (document.getElementById("mir-selector-styles")) {
             return;
@@ -738,6 +779,8 @@
             });
 
             stateSelect.disabled = false;
+
+            enableSearchableSelect("#stateSelect");
         } catch (error) {
             console.error("Unable to load states:", error);
 
@@ -784,6 +827,8 @@
             });
 
             countySelect.disabled = false;
+
+            enableSearchableSelect("#countySelect");
 
             countySelect.onchange = () => {
                 const selectedIndex = countySelect.value;
