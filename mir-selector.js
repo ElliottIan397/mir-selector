@@ -550,7 +550,7 @@ return ts;
                             aria-label="Select a county"
                             disabled
                         >
-                            <option value="">Select a state first</option>
+                            <option value="">Loading counties...</option>
                         </select>
                     </div>
                 </div>
